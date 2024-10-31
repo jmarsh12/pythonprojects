@@ -1,45 +1,63 @@
 import random
+import string
+
+security_flag = False
+
 
 def passwd_prompt():
+    global security_flag
     usr_input = input("Please enter option, or \"help\" for available options: ")
 
     if usr_input == "help":
-        print("==========================================")
-        print("=              Options menu              =")
-        print("= [blank]   -> (default everything)      =")
-        print("= v         -> verbose (generates group) =")
-        print("= s         -> secure                    =")
-        print("= l <value> -> length (default 8, max 20)=")
-
-    # usr_input = input("$ ")
+        print("===========================================")
+        print("=              Options menu               =")
+        print("= [blank]    -> (default everything)      =")
+        print("= v          -> verbose (generates group) =")
+        print("= vl <value> -> verbose with length       =")
+        print("= s          -> secure                    =")
+        print("= l <value>  -> length (min 8, max 20)=")
+        print("===========================================")
 
     elif usr_input == "":
-        for i in range(7):
-            variables = variables_list[i]
-            print(variables, end="")
+        password = generate_password(8)
+        print(password)
 
     elif usr_input == "v":
         count = 0
         while count <= 20:
-            for i in range(7):
-                variables = variables_list[i]
-                print(variables, end="")
+            password = generate_password(8)
+            print(password)
             count += 1
-            print("")
+
+    elif usr_input == "vl":
+        count = 0
+        while count <= 20:
+            password = generate_password(8)
+            print(password)
+            count += 1
 
     elif usr_input == "s":
-        # TODO: make a separate secure list with a greater variety of capitals and symbols
-        for i in range(7):
-            variables = variables_list[i]
-            print(variables, end="")
+        security_flag = True
+        password = generate_password(8)
+        print(password)
 
     elif usr_input[0] == "l":
-        pass_len = (usr_input[2] + usr_input[3]) # concatenate the value entered for length
-        pass_len = int(pass_len) # cast to an integer to make it an iterator
-        for i in range(pass_len):
-            variables = variables_list[i]
-            print(variables, end="")
+        try:
+            pass_len = (usr_input[2] + usr_input[3])  # concatenate the value entered for length
+        finally:
+            print("Improper format. If desired length is < 10, enter 0 first (ie. 09)")
+            usr_input = input("Do you want to generate a new password? Y/N ")
 
+            if usr_input == "Y" or usr_input == "y":
+                passwd_prompt()
+            else:
+                return
+
+        pass_len = int(pass_len)  # cast to an integer to make it an iterator
+        password = generate_password(pass_len)
+        print(password)
+
+    security_flag = False
     print("\n")
     usr_input = input("Do you want to generate a new password? Y/N ")
 
@@ -48,20 +66,22 @@ def passwd_prompt():
     else:
         return
 
-up_case1 = chr(random.randint(65, 90)) # generates a random uppercase number in the range of 65-90 ASCII
-up_case2 = chr(random.randint(65, 90))
-low_case1 = chr(random.randint(97, 122)) # generates a random lowercase number
-low_case2 = chr(random.randint(97, 122))
-low_case3 = chr(random.randint(97, 122))
-low_case4 = chr(random.randint(97, 122))
-rand_int1 = int(random.randint(48, 57)) # creates a random number
-rand_int2 = int(random.randint(48, 57))
-rand_punc = chr(random.randint(33, 38)) # creates a random punctuation point
 
-variables_list = [up_case1, up_case2, low_case1, low_case2, low_case3, low_case4, rand_int1, rand_int2, rand_punc]
+def generate_password(length):
+    global security_flag
+    digits = string.digits
+    u_case = string.ascii_uppercase
+    l_case = string.ascii_lowercase
 
-random.shuffle(variables_list)
+    password = [random.choice(digits), random.choice(u_case), random.choice(l_case)]
 
-print("Welcome to Python Password Generator.")
+    if security_flag:
+        for i in range(length - 3):
+            password.append(random.choice(digits + u_case + digits + l_case + u_case))
+    else:
+        for i in range(length - 3):
+            password.append(random.choice(digits + u_case + l_case))
 
-passwd_prompt()
+    random.shuffle(password)
+
+    return ''.join(password)
