@@ -30,7 +30,7 @@ def passwd_prompt():
             print(password)
             count += 1
 
-    elif usr_input == "vl":
+    elif (usr_input[0] + usr_input[1]) == "vl":
         count = 0
         pass_len = usr_input[3] + usr_input[4]
         pass_len = int(pass_len)  # cast to an integer to make it an iterator
@@ -56,25 +56,24 @@ def passwd_prompt():
         password = generate_password(8)
         print(password)
 
-    elif usr_input == "sl":
+    elif (usr_input[0] + usr_input[1]) == "sl":
         security_flag = True
-        count = 0
-        while count <= 20:
-            try:
-                pass_len = (usr_input[2] + usr_input[3])  # concatenate the value entered for length
-            except:
-                print("Improper format. If desired length is < 10, enter 0 first (ie. 09)")
-                usr_input = input("Do you want to generate a new password? Y/N ")
+        pass_len = usr_input[3] + usr_input[4]
+        pass_len = int(pass_len)  # cast to an integer to make it an iterator
+        # try:
+        #     pass_len = (usr_input[2] + usr_input[3])  # concatenate the value entered for length
+        # except:
+        #     print("Improper format. If desired length is < 10, enter 0 first (ie. 09)")
+        #     usr_input = input("Do you want to generate a new password? Y/N ")
+        #
+        #     if usr_input == "Y" or usr_input == "y":
+        #         passwd_prompt()
+        #     else:
+        #         return
 
-                if usr_input == "Y" or usr_input == "y":
-                    passwd_prompt()
-                else:
-                    return
-
-            pass_len = int(pass_len)  # cast to an integer to make it an iterator
-            password = generate_password(pass_len)
-            print(password)
-            count += 1
+        pass_len = int(pass_len)  # cast to an integer to make it an iterator
+        password = generate_password(pass_len)
+        print(password)
 
     elif usr_input[0] == "l":
         try:
